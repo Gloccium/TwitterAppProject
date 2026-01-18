@@ -1,0 +1,14 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://0.0.0.0:3306/ums?serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: root
+    password: passw
+
+github:
+  client-id: Ov23lik3wnATtfseo3hu
+  client-secret: e6b5fa1c6d22ec71fc9a380ce40cb1f8ba048b72
+  redirect-uri: http://localhost:9000/auth/github/callback
