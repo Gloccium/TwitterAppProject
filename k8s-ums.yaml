@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ums-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ums
+  template:
+    metadata:
+      labels:
+        app: ums
+    spec:
+      containers:
+        - name: ums
+          image: ums-service:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://host.minikube.internal:3306/ums?serverTimezone=UTC&useLegacyDatetimeCode=false"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "passw"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ums-service
+spec:
+  type: ClusterIP
+  selector:
+    app: ums
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: http

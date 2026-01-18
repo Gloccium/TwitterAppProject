@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitter-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twitter
+  template:
+    metadata:
+      labels:
+        app: twitter
+    spec:
+      containers:
+        - name: twitter
+          image: twitter-service:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9001
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://host.minikube.internal:3306/twitter?serverTimezone=UTC&useLegacyDatetimeCode=false"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "passw"
+
+            - name: UMS_HOST
+              value: "http://ums-service"
+            - name: UMS_PORT
+              value: "9000"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: twitter-service-k8s
+spec:
+  type: ClusterIP
+  selector:
+    app: twitter
+  ports:
+    - port: 9001
+      targetPort: 9001
+      protocol: TCP
+      name: http
